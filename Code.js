@@ -1,5 +1,7 @@
 /* global AdminDirectory, DocumentApp */
 
+// https://developers.google.com/apps-script/advanced/admin-sdk-directory
+
 "use strict";
 
 // eslint-disable-next-line no-unused-vars
@@ -15,26 +17,30 @@ function updateContactDoc() {
 
   body.editAsText()
     .appendText(
-      `Please email Band Manager ${managerName} for general information or for booking:\n`
+      `Please email Band Manager ${managerName} for general information or for booking:\n\n`
     ).appendText("manager@sutherlandpipeband.org\n\n")
     .appendText(
-      `For questions about joining the band or learning to play, please contact Pipe\nMajor ${pmName}:\u00A0\u00A0`
+      `For questions about joining the band or learning to play, please contact Pipe\nMajor ${pmName}:\n\n`
     ).appendText("pm@sutherlandpipeband.org");
 
   // https://developers.google.com/apps-script/reference/document/body#findtextsearchpattern
   rangeElement = body.findText("manager@sutherlandpipeband.org");
-  rangeElement.getElement().asText().setLinkUrl(
-    rangeElement.getStartOffset(),
-    rangeElement.getEndOffsetInclusive(),
-    `mailto:${managerName}<manager@sutherlandpipeband.org>`
-  );
+  rangeElement.getElement()
+    .asText()
+    .setLinkUrl(
+      rangeElement.getStartOffset(),
+      rangeElement.getEndOffsetInclusive(),
+      `mailto:${managerName}<manager@sutherlandpipeband.org>`
+    );
 
   rangeElement = body.findText("pm@sutherlandpipeband.org");
-  rangeElement.getElement().asText().setLinkUrl(
-    rangeElement.getStartOffset(),
-    rangeElement.getEndOffsetInclusive(),
-    `mailto:${pmName}<pm@sutherlandpipeband.org>`
-  );
+  rangeElement.getElement()
+    .asText()
+    .setLinkUrl(
+      rangeElement.getStartOffset(),
+      rangeElement.getEndOffsetInclusive(),
+      `mailto:${pmName}<pm@sutherlandpipeband.org>`
+    );
 
   body.editAsText().setFontFamily(0, (body.getText().length - 1), "Arial");
   body.editAsText().setFontSize(0, (body.getText().length - 1), 12);
