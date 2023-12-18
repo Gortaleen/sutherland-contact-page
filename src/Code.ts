@@ -2,6 +2,7 @@
  * https://github.com/Gortaleen/sutherland-contact-page
  * https://github.com/google/clasp#readme
  * https://github.com/google/clasp/blob/master/docs/typescript.md
+ * https://khalilstemmler.com/blogs/typescript/eslint-for-typescript/
  * https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing
  * https://www.typescriptlang.org/tsconfig#strict
@@ -17,13 +18,18 @@ function updateContactRun() {
 
 const ContactUpdate = (function () {
   function main() {
-    const body = DocumentApp.getActiveDocument().getBody();
+    const docId =
+      PropertiesService.getScriptProperties().getProperty("DOCUMENT_ID");
+    if (!docId) {
+      throw "Document ID is missing";
+    }
+    const body = DocumentApp.openById(docId).getBody();
     let rangeElement;
     if (!AdminDirectory.Users) {
       throw "AdminDirectory.Users.get not available";
     }
     const managerName = AdminDirectory.Users.get(
-      "manager@sutherlandpipeband.org",
+      "manager@sutherlandpipeband.org"
     ).name?.fullName;
 
     // https://developers.google.com/apps-script/advanced/admin-sdk-directory
@@ -35,11 +41,11 @@ const ContactUpdate = (function () {
     body
       .editAsText()
       .appendText(
-        `Please email Band Manager ${managerName} for general information or for booking:\n\n`,
+        `Please email Band Manager ${managerName} for general information or for booking:\n\n`
       )
       .appendText("manager@sutherlandpipeband.org\n\n")
       .appendText(
-        `For questions about joining the band or learning to play, please contact Pipe\nMajor ${pmName}:\n\n`,
+        `For questions about joining the band or learning to play, please contact Pipe\nMajor ${pmName}:\n\n`
       )
       .appendText("pm@sutherlandpipeband.org");
 
@@ -51,7 +57,7 @@ const ContactUpdate = (function () {
       .setLinkUrl(
         rangeElement.getStartOffset(),
         rangeElement.getEndOffsetInclusive(),
-        `mailto:${managerName}<manager@sutherlandpipeband.org>`,
+        `mailto:${managerName}<manager@sutherlandpipeband.org>`
       );
 
     rangeElement = body.findText("pm@sutherlandpipeband.org");
@@ -61,7 +67,7 @@ const ContactUpdate = (function () {
       .setLinkUrl(
         rangeElement.getStartOffset(),
         rangeElement.getEndOffsetInclusive(),
-        `mailto:${pmName}<pm@sutherlandpipeband.org>`,
+        `mailto:${pmName}<pm@sutherlandpipeband.org>`
       );
 
     body.editAsText().setFontFamily(0, body.getText().length - 1, "Arial");
